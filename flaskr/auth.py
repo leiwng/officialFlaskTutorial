@@ -1,7 +1,7 @@
 import functools
 
 from flask import (
-  blueprint, flash, g, redirect, render_template, request, session, url_for
+  Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -41,14 +41,14 @@ def register():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-  if request.methods == 'POST':
+  if request.method == 'POST':
     username = request.form['username']
     password = request.form['password']
     db = get_db()
     error = None
 
     user = db.execute(
-      'SELECT * FROM users WHERE username = ?', (username)
+      'SELECT * FROM user WHERE username = ?', (username,)
     ).fetchone()
 
     if user is None:
@@ -74,22 +74,22 @@ def load_logged_in_user():
     g.user = None
   else:
     g.user = get_db().execute(
-      'SELECT * FROM user WHERE id = ?', (user_id)
+      'SELECT * FROM user WHERE id = ?', (user_id,)
     ).fetchone()
 
 
-  @bp.route('/logout')
-  def logout():
-    session.clear()
-    return redirect(url_for('index'))
+@bp.route('/logout')
+def logout():
+  session.clear()
+  return redirect(url_for('index'))
 
 
-  def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-      if g.user is None:
-        return redirect(url_for('auth.login'))
+def login_required(view):
+  @functools.wraps(view)
+  def wrapped_view(**kwargs):
+    if g.user is None:
+      return redirect(url_for('auth.login'))
 
-      return view(**kwargs)
+    return view(**kwargs)
 
-    return wrapped_view
+  return wrapped_view
