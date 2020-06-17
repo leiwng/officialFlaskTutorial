@@ -1,3 +1,5 @@
 {
-  "python.pythonPath": ".venv\\Scripts\\python.exe"
+  "python.pythonPath": "d:\\prj\\officialFlaskTutorial\\venv\\Scripts\\python.exe",
+  "editor.fontFamily": "'InconsolataLGC Nerd Font Mono','JetBrainsMono Nerd Font Mono','Noto Mono for Powerline'",
+  "editor.mouseWheelZoom": true
 }
